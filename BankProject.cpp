@@ -42,28 +42,8 @@ int valdiateNumber(std::string message) {
 	}
 	return number;
 }
-int GetRandomNumber(int from, int to) {
-	int randomNumber = rand() % (to - from + 1) + from;
-	return randomNumber;
-}
 
-std::string JoinString(std::vector<std::string> vector, std::string delimiter) {
-	std::string text = "";
-	for (std::string i : vector)
-	{
-		text += i + delimiter;
-	}
-	return text.substr(0, text.length() - delimiter.length());
-}
 
-std::string JoinString(std::string arr[], int length, std::string delimiter) {
-	std::string text = "";
-	for (int i = 0; i < length; i++)
-	{
-		text += arr[i] + delimiter;
-	}
-	return text.substr(0, text.length() - delimiter.length());
-}
 std::vector<std::string> StringSplit(std::string text, std::string delimiter) {
 	std::string word = "";
 	int pos = 0;
@@ -81,107 +61,7 @@ std::vector<std::string> StringSplit(std::string text, std::string delimiter) {
 	}
 	return container;
 }
-enum enTrim {
-	Trim, TrimLeft, TrimRight
-};
-std::string TrimLeft1(std::string text) {
-	for (int i = 0; i < text.length(); i++) {
-		if (text[i] != ' ') {
-			return text.substr(i, text.length() - i);
-		}
-	}
-	return "";
-}
-std::string TrimRight1(std::string text) {
-	for (int i = text.length() - 1; i >= 0; i--) {
-		if (text[i] != ' ') {
-			return text.substr(0, i + 1);
 
-		}
-	}
-	return "";
-}
-std::string TrimString(std::string text, enTrim trim = enTrim::Trim) {
-	switch (trim) {
-	case enTrim::Trim:
-	case enTrim::TrimLeft:
-		text = TrimLeft1(text);
-		break;
-	case enTrim::TrimRight:
-		text = TrimRight1(text);
-		break;
-	default:
-		std::cout << "HOW DID YOU DO THAT" << std::endl;
-
-	}
-	return text;
-}
-std::string ReverseWordsString(std::string text) {
-	std::string reversedString = "";
-	for (int i = text.length() - 1; i >= 0; i--) {
-		reversedString += text[i];
-	}
-	return reversedString;
-}
-std::string ReverseString(std::string text) {
-	std::vector<std::string>vtext = StringSplit(text, " ");
-	std::string reversedString = "";
-	for (int i = vtext.size() - 1; i >= 0; i--) {
-		reversedString += vtext[i] + " ";
-	}
-	return reversedString;
-}
-std::string CaptalizeLettersInSentence(std::string sentence) {
-
-	for (int i = 0; i < sentence.length(); i++) {
-		sentence[i] = std::toupper(sentence[i]);
-	}
-	return sentence;
-}
-std::string ReplaceWordInString(std::string text, std::string target, std::string replacement, bool caseMatch = true) {
-	std::vector<std::string>vtext = StringSplit(text, " ");
-	std::string temp;
-	if (!caseMatch) {
-		target = CaptalizeLettersInSentence(target);
-
-	}
-	std::string ChangedText = "";
-	for (int i = 0; i < vtext.size(); i++) {
-		if (caseMatch)
-		{
-			if (vtext[i] == target)
-				vtext[i] = replacement;
-		}
-		else
-		{
-			temp = CaptalizeLettersInSentence(vtext[i]);
-			if (temp == target)
-				vtext[i] = replacement;
-		}
-
-		ChangedText += vtext[i] + " ";
-	}
-	ChangedText.pop_back();
-	return ChangedText;
-}
-std::string FastReplaceWordInString(std::string text, std::string target, std::string replacement) {
-	int pos = text.find(target);
-	while (pos != std::string::npos) {
-		text.replace(pos, target.length(), replacement);
-		pos = text.find(target);
-	}
-	return text;
-}
-std::string RemovePunct(std::string& text) {
-	std::string noPunctString = "";
-	for (char& i : text) {
-		if (!ispunct(i))
-		{
-			noPunctString += i;
-		}
-	}
-	return noPunctString;
-}
 
 struct stClient {
 	std::string name;
@@ -815,6 +695,11 @@ void LoginScreen() {
 	std::cout << "____________________________________________________" << std::endl;
 	std::cout << "----------------------------------------------------" << std::endl;
 }
+
+void WaitAndClear() {
+	Sleep(1000);
+	system("cls");
+}
 void WelcomeScreen() {
 	std::cout << "____________________________________________________" << std::endl;
 	std::cout << "----------------------------------------------------" << std::endl;
@@ -822,7 +707,6 @@ void WelcomeScreen() {
 	std::cout << "____________________________________________________" << std::endl;
 	std::cout << "----------------------------------------------------" << std::endl;
 
-	WaitAndClear();
 }
 void InvalidScreen() {
 	std::cout << "____________________________________________________" << std::endl;
@@ -830,23 +714,23 @@ void InvalidScreen() {
 	std::cout << std::right << std::setw(29) << "Invalid!!" << std::endl;
 	std::cout << "____________________________________________________" << std::endl;
 	std::cout << "----------------------------------------------------" << std::endl;
-
-	WaitAndClear();
 }
 stUser Login(const std::string& usersDirectory, const std::string& delimiter, std::vector<stUser>& usersData) {
-
+	std::cout << "Admin username:admin,password:1233" << std::endl;
 	LoginScreen();
 	stUser loginAttempt = ReadUserData();
-	ProcessingScreen();
 
 	while (!IsUsernameAndPasswordCorrect(usersDirectory, delimiter, loginAttempt, usersData)) {
 		system("cls");
 		InvalidScreen();
+		WaitAndClear();
 		LoginScreen();
 		loginAttempt = ReadUserData();
-		ProcessingScreen();
+
 	}
+	system("cls");
 	WelcomeScreen();
+	WaitAndClear();
 	return loginAttempt;
 }
 enum enMainMenuChoices {
@@ -1146,8 +1030,13 @@ int main()
 {
 	srand(time(NULL));
 	std::string clientDirectory = "Clients.txt";
-	std::string usersDirectory = "User.txt";
+	std::string usersDirectory = "Users.txt";
 	std::string delimiter = "#//#";
+
+	/*stUser admin = UserDataLineToData("Admin#//#1233#//#-1", delimiter);
+	AddUserDataToFile(usersDirectory, admin, delimiter);*/
+
+
 	StartBankApp(usersDirectory, clientDirectory);
 	return 0;
 }
