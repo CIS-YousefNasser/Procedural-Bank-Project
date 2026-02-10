@@ -101,5 +101,5 @@ g++ main.cpp -o BankSystem
 ## default Login Credentials
 
 * **Username**: Admin
-* **Password**: 1234
+* **Password**: 1233
 * *(Note: These credentials allow full access to all system features).*
